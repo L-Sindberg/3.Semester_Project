@@ -1,0 +1,61 @@
+@inject AuthController AuthController
+@inject NavigationManager NavigationManager
+
+<AuthorizeView>
+    <Authorized>
+        <ul>
+            <li>
+                <NavLink href="/Memberinfo" Match="NavLinkMatch.All">
+                    Memberinfo
+                </NavLink>
+            </li>
+            <li>
+                <NavLink href="/MemberTeamStatus" Match="NavLinkMatch.All">
+                    MemberTeamStatus
+                </NavLink>
+            </li>
+            <li>
+                <NavLink href="/Teams" Match="NavLinkMatch.All">
+                    Teams
+                </NavLink>
+            </li>
+            <li>
+                <NavLink href="/Calendar" Match="NavLinkMatch.All">
+                    Calendar
+                </NavLink>
+            </li>
+            <li>
+                <NavLink href="/PenaltyJar" Match="NavLinkMatch.All">
+                    Penalty Jar
+                </NavLink>
+            </li>
+            <li>
+                <NavLink href="/MailSystem" Match="NavLinkMatch.All">
+                    Mail system
+                </NavLink>
+            </li>
+            <li>
+                <NavLink href="/History" Match="NavLinkMatch.All">
+                    History
+                </NavLink>
+            </li>
+            <li>
+                <NavLink href="/Settings" Match="NavLinkMatch.All">
+                    Settings
+                </NavLink>
+            </li>
+            <li><p>@context.User.Identity.Name</p></li>
+            <li><a href="/logout">Sign out</a></li>
+        </ul>
+    </Authorized>
+</AuthorizeView>
+
+@code
+{
+    private async void Logout(AuthenticationState context)
+    {
+        //AuthController.Logout();
+        NavigationManager.NavigateTo("/");
+
+    }
+}

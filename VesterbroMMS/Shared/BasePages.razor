@@ -1,0 +1,26 @@
+@inherits LayoutComponentBase
+
+<AuthorizeView Roles="Board">
+    <Authorized>
+        <div class="mainNavbar navbar">
+            <NavMenu />
+        </div>
+
+        <div class="main">
+            @Body
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+<AuthorizeView Roles="Google">
+    <Authorized>
+        <h1 @onclick="() => doStuff(context)">You do not have access to the system! Send a request to be authorized?</h1>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private void doStuff(AuthenticationState context)
+    {
+        
+    }
+}

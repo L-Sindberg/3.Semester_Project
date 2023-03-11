@@ -1,0 +1,37 @@
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavigationManager
+
+@layout NoNavbarLayout
+@page "/"
+
+<div class="login">
+    <div class="loginTitle">
+        <h1>Login</h1>
+    </div>
+    <a href="auth/google-login" class="btn btn-secondary">Login with Google!</a>
+</div>
+
+    <!--
+    <EditForm Model="@user" OnValidSubmit=@ValidateUser class="loginForm">
+
+        <label for="email">E-mail:</label>
+        <InputText class="inputField" id="email" @bind-Value="user.Email" />
+        <label for="password">Password:</label>
+        <InputText class="inputField" type="password" id="password" @bind-Value="user.Password" />
+        <button class="loginButton" type="submit">Submit</button>
+
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+    </EditForm>-->
+
+@code {
+    protected async override Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+
+        if (authState.User.IsInRole("Board"))
+        {
+            NavigationManager.NavigateTo("memberinfo");
+        }
+    }
+}

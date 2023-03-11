@@ -1,0 +1,154 @@
+@page "/MemberInfo"
+@using VesterbroMMS.Services
+@using VesterbroMMS.Model
+@using VesterbroMMS.Model.Observers
+@using System.Threading
+@inject MemberService MemberService
+@inject MemberController MemberController
+
+<div class="navbar subNavbar">
+    <ul>
+        <li><button @onclick='() => { EmptyMember = new Member(); view = "AddMember"; }'>Add member</button></li>
+        <li><button @onclick='() => { SelectedMember = MemberController.GetMemberById(MemberController.GetFirstSelectedID()); view = "EditMember"; }' disabled=@(MemberController.NumberOfSelectedMembers() == 1 ? false : true)>Edit member</button></li>
+        <li><button @onclick='() => { EmptyMember = new Member(); view = "RemoveMember"; }' disabled="@(MemberController.NumberOfSelectedMembers() == 0 ? true : false)">Remove selected members</button></li>
+        <li><button disabled>CCC</button></li>
+        <li><button @onclick='() => { MemberController.ClearSelectedmemberslist(); membersReporter.Members.ForEach( member => { MemberController.SelectMember(member.Id); }); }' disabled="@(MemberController.NumberOfSelectedMembers() == membersReporter.Members.Count? true : false )">Select all</button></li>
+        <li><button @onclick='() => { MemberController.ClearSelectedmemberslist(); }' disabled="@(MemberController.NumberOfSelectedMembers() == 0 ? true : false)">Remove selection</button></li>
+        <li><button disabled>Send mail</button></li>
+    </ul>
+</div>
+@switch (view)
+{
+    case "AddMember":
+        <EditForm Model="@EmptyMember" OnValidSubmit=@AddMember class="memberForm">
+            <h1>Add New Member</h1>
+            <label for="name">Name:</label>
+            <InputText class="inputField" name="name" @bind-Value="EmptyMember.Name" />
+            <label for="email">Email:</label>
+            <InputText class="inputField" name="email" @bind-Value="EmptyMember.Email" />
+            <label for="address">Address:</label>
+            <InputText class="inputField" name="address" @bind-Value="EmptyMember.Address" />
+            <label for="phone">Phone:</label>
+            <InputText class="inputField" name="phone" @bind-Value="EmptyMember.PhoneNumber" />
+            <label for="CPR">CPR:</label>
+            <InputText class="inputField" name="CPR" @bind-Value="EmptyMember.SocialSecurityNumber" />
+            <label for="JoinDate">JoinDate:</label>
+            <InputDate class="inputField" name="JoinDate" @bind-Value="EmptyMember.JoinDate" />
+            <button @onclick='() => view = "Data"'>Cancel</button>
+            <button type="submit">Submit</button>
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+        </EditForm>
+        break;
+    case "EditMember":
+        <EditForm Model="@SelectedMember" OnValidSubmit=@EditMember class="memberForm">
+            <h1>Edit Member</h1>
+            <label for="name">Name:</label>
+            <InputText class="inputField" name="name" @bind-Value="SelectedMember.Name" />
+            <label for="email">Email:</label>
+            <InputText class="inputField" name="email" @bind-Value="SelectedMember.Email" />
+            <label for="address">Address:</label>
+            <InputText class="inputField" name="address" @bind-Value="SelectedMember.Address" />
+            <label for="phone">Phone:</label>
+            <InputText class="inputField" name="phone" @bind-Value="SelectedMember.PhoneNumber" />
+            <label for="CPR">CPR:</label>
+            <InputText class="inputField" name="CPR" @bind-Value="SelectedMember.SocialSecurityNumber" />
+            <label for="JoinDate">JoinDate:</label>
+            <InputDate class="inputField" name="JoinDate" @bind-Value="SelectedMember.JoinDate" />
+            <button @onclick='() => view = "Data"'>Cancel</button>
+            <button type="submit">Submit</button>
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+        </EditForm>
+        break;
+    case "RemoveMember":
+        <EditForm Model="@EmptyMember" OnValidSubmit=@RemoveMembers class="memberForm">
+            <h1>Remove Member</h1>
+            <p>Do you really vandt to delete @MemberController.NumberOfSelectedMembers() members</p>
+            <button @onclick='() => view = "Data"'>Cancel</button>
+            <button type="submit">Submit</button>
+        </EditForm>
+        break;
+    case "Data":
+    default:
+        <table class="infoTable">
+            <thead>
+                <tr>
+                    <th @onclick='() => MemberController.Sort("Name")'>Name</th>
+                    <th @onclick='() => MemberController.Sort("Email")'>Email</th>
+                    <th @onclick='() => MemberController.Sort("Address")'>Address</th>
+                    <th @onclick='() => MemberController.Sort("PhoneNumber")'>Phone</th>
+                    <th @onclick='() => MemberController.Sort("SocialSecurityNumber")'>CPR</th>
+                    <th @onclick='() => MemberController.Sort("JoinDate")'>Join Date</th>
+                    <th @onclick='() => MemberController.Sort("CCC")'>CCC</th>
+                    <th @onclick='() => MemberController.Sort("ID")'>#ID</th>
+                </tr>
+            </thead>
+            @if (membersReporter == null)
+            {
+                <h1>Loading...</h1>
+            }
+            else
+            {
+                <tbody>
+                    @foreach (Member member in membersReporter.Members)
+                    {
+                        <tr @onclick="() => MemberController.SelectMember(member.Id)" class="@(MemberController.IsMemberSelected(member.Id) ? "selected" : "")">
+                            <td>@member.Name</td>
+                            <td>@member.Email</td>
+                            <td>@member.Address</td>
+                            <td>@member.PhoneNumber</td>
+                            <td>@member.SocialSecurityNumber</td>
+                            <td>@member.JoinDate.ToShortDateString()</td>
+                            <td>@member.CCC</td>
+                            <td>@member.Id</td>
+                        </tr>
+                    }
+                </tbody>
+            }
+
+        </table>
+        break;
+}
+
+@code {
+    private string view = "Data";
+    Member EmptyMember = new Member();
+    Member SelectedMember = new Member();
+
+    private MembersReporter membersReporter;
+
+    protected async override Task OnInitializedAsync()
+    {
+        membersReporter = new MembersReporter("FixedReporter", () =>
+        {
+            InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
+        });
+        MemberController.MembersTracker.Subscribe(membersReporter);
+        await MemberController.Initialize();
+    }
+
+    private void AddMember()
+    {
+        membersReporter.Members.Add(EmptyMember);
+        view = "Data";
+    }
+
+    private void EditMember()
+    {
+        view = "Data";
+    }
+
+    private void RemoveMembers()
+    {
+        foreach (int id in MemberController.GetSelectedmemberslist())
+        {
+            membersReporter.Members.Remove(MemberController.GetMemberById(id));
+        }
+        MemberController.ClearSelectedmemberslist();
+        view = "Data";
+    }
+}

@@ -1,0 +1,10 @@
+
+VesterbroMMS.csproj.user
+.vs
+bin
+obj
+*.vscode
+*.uproject
+*.bin
+*.obj
+*.vs

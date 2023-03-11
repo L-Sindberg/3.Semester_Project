@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VesterbroMMS", "VesterbroMMS.csproj", "{9666279B-8838-48A7-B86C-E98DE4A09050}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLibrary", "..\DataLibrary\DataLibrary.csproj", "{9AAFD042-F31C-44D6-AAC6-6950E550A75B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9666279B-8838-48A7-B86C-E98DE4A09050}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9666279B-8838-48A7-B86C-E98DE4A09050}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9666279B-8838-48A7-B86C-E98DE4A09050}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9666279B-8838-48A7-B86C-E98DE4A09050}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AAFD042-F31C-44D6-AAC6-6950E550A75B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AAFD042-F31C-44D6-AAC6-6950E550A75B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AAFD042-F31C-44D6-AAC6-6950E550A75B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AAFD042-F31C-44D6-AAC6-6950E550A75B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1218CE88-FC79-44EE-B4B2-DAAC4AA59F76}
+	EndGlobalSection
+EndGlobal
